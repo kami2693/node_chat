@@ -50,17 +50,19 @@ io.on('connection', (socket) => {
   });
 
   // Обробка повідомлень
-  socket.on('sendMessage', ({ roomName, message, username }) => {
+  socket.on('sendMessage', (messageData) => {
+    const { roomName, text, author, time } = messageData;
+
     if (rooms.has(roomName)) {
-      const messageData = {
-        text: message,
-        author: username,
-        time: new Date().toISOString(),
+      const message = {
+        text,
+        author,
+        time,
         room: roomName,
       };
 
-      messages.get(roomName).push(messageData);
-      io.to(roomName).emit('newMessage', messageData);
+      messages.get(roomName).push(message);
+      io.to(roomName).emit('newMessage', message);
     }
   });
 

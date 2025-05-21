@@ -101,14 +101,17 @@ function handleCreateRoom() {
 }
 
 function handleSendMessage() {
-  const message = messageInput.value.trim();
+  const messageText = messageInput.value.trim();
 
-  if (message && currentRoom) {
-    socket.emit('sendMessage', {
+  if (messageText && currentRoom) {
+    const messageData = {
       roomName: currentRoom,
-      message,
-      username,
-    });
+      text: messageText,
+      author: username,
+      time: new Date().toISOString(),
+    };
+
+    socket.emit('sendMessage', messageData);
     messageInput.value = '';
   }
 }
